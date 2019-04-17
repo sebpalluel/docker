@@ -1,7 +1,4 @@
-FROM ruby:latest
-
+FROM ft-rails:on-build
 EXPOSE 3000
-RUN apt-get update && apt-get install -y nodejs && gem install rails
-ONBUILD COPY . /opt/app
-ONBUILD WORKDIR /opt/app/server
-ONBUILD CMD bundle install && rails db:migrate && rails db:seed
+CMD ["rails", "s", "-b", "0.0.0.0", "-p" ,"3000"]
+# docker run -it --rm -p 3000:3000 IMAGE

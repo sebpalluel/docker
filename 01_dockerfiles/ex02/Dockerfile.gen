@@ -1,0 +1,14 @@
+FROM ruby:2.6.2
+MAINTAINER psebasti
+
+EXPOSE 3000
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs && gem install rails
+ONBUILD COPY ruby-rails-app /opt/app
+ONBUILD WORKDIR /opt/app
+ONBUILD RUN bundle install
+ONBUILD RUN rails db:migrate
+ONBUILD RUN rails db:seed
+
+# ONBUILD explained https://www.learnitguide.net/2018/06/docker-onbuild-command-with-examples.html
+# example to build lightweight ruby on rails Dockerfile https://blog.kontena.io/building-minimal-docker-image-for-rails/
+# run with `docker build -t ft-rails:on-build -f Dockerfile.gen .`
