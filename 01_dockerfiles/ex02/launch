@@ -1,0 +1,4 @@
+#!/bin/bash
+docker build -t ft-rails:on-build -f Dockerfile.gen .
+docker build -t ruby-wrapper .
+docker run -it --rm -p 3000:3000 ruby-wrapper
