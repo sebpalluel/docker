@@ -1,2 +1,2 @@
 docker build -t gitlab-server . && \
-docker run -it -p 8080:80 -p 8081:22 -p 8082:443 --privileged gitlab-server
+docker run -it --rm -p 8080:80 -p 8081:22 -p 8082:443 --privileged gitlab-server
