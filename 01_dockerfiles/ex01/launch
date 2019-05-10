@@ -1,0 +1,2 @@
+docker build -t teamspeak-server . && \
+docker run -p 9987:9987/udp teamspeak-server
