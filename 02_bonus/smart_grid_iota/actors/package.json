@@ -1,0 +1,19 @@
+{
+  "name": "actors",
+  "version": "1.0.0",
+  "description": "",
+  "main": "eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start_consumer": "node ./consumer/consumer.js",
+    "start_storage": "node ./energie_storage/storage.js",
+    "start_producer": "node ./generator_producer/solar_panel.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cloner": "^0.4.0",
+    "colors": "^1.3.3",
+    "iota.lib.js": "^0.5.1"
+  }
+}

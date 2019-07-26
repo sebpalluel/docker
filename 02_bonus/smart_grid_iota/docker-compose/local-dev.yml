@@ -1,0 +1,102 @@
+version: '2.3'
+
+#networks:
+#  iota-sg-local-dev:
+#    driver: bridge
+
+services:
+
+  iota-sg-dev-front:
+    container_name: iota-sg-dev-front
+    image: iota-sg-dev-front
+    build:
+      context: ../front
+      dockerfile: ./docker/local-dev.dockerfile
+    #volumes:
+    #  - type: bind
+    #    source: front
+    #    target: /front
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+      - '3021:3021'
+    expose:
+      - '3021'
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.99.100:8080"]
+      interval: 10s
+      retries: 10
+      timeout: 10s
+      start_period: 30s
+    #networks:
+    #  - iota-sg-local-dev
+
+  iota-sg-dev-server:
+    container_name: iota-sg-dev-server
+    image: iota-sg-dev-server
+    build:
+      context: ../server
+      dockerfile: ./docker/local-dev.dockerfile
+   # volumes:
+   #   - type: bind
+   #     source: server
+   #     target: /server
+    ports:
+      - '1071:1071'
+    expose:
+      - '3021'
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - iota-sg-dev-front
+    #networks:
+    #  - iota-sg-local-dev
+  iota-sg-dev-producer:
+    container_name: iota-sg-dev-producer
+    image: iota-sg-dev-producer
+    build:
+      context: ../actors
+      dockerfile: ./docker/local-dev.dockerfile
+    restart: unless-stopped
+    #networks:
+    #  - iota-sg-local-dev
+    network_mode: host
+    command: npm run start_producer
+    depends_on:
+      iota-sg-dev-front:
+        condition: service_healthy
+
+  iota-sg-dev-storage:
+    container_name: iota-sg-dev-storage
+    image: iota-sg-dev-storage
+    build:
+      context: ../actors
+      dockerfile: ./docker/local-dev.dockerfile
+    restart: unless-stopped
+    #networks:
+    #  - iota-sg-local-dev
+    network_mode: host
+    depends_on:
+      - iota-sg-dev-producer
+    command: npm run start_storage
+    depends_on:
+      iota-sg-dev-producer:
+        condition: service_started
+
+  iota-sg-dev-consumer:
+    container_name: iota-sg-dev-consumer
+    image: iota-sg-dev-consumer
+    build:
+      context: ../actors
+      dockerfile: ./docker/local-dev.dockerfile
+    restart: unless-stopped
+    #networks:
+    #  - iota-sg-local-dev
+    network_mode: host
+    depends_on:
+      - iota-sg-dev-storage
+    command: npm run start_consumer
+    depends_on:
+      iota-sg-dev-storage:
+        condition: service_started
