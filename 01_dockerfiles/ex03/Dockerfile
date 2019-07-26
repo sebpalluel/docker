@@ -26,6 +26,5 @@ RUN apt update && apt upgrade -y && apt-get install -y curl ca-certificates open
 		CMD service ssh start \
 			&& /opt/gitlab/embedded/bin/runsvdir-start & \
 			gitlab-ctl reconfigure && gitlab-ctl tail
-			#gitlab-ctl reconfigure && gitlab-ctl tail
 # git clone -c http.sslverify=false https://192.168.99.100:8082/root/test.git
 # git clone ssh://git@192.168.99.100:8081/root/test.git
